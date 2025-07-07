@@ -1,0 +1,39 @@
+Progetto Alloggiati Web - Microservizio
+
+1. **Introduzione**:
+   Il progetto è un microservizio che interagisce con il portale Alloggiati Web della Polizia di Stato. Questo servizio gestisce l'invio delle schedine degli ospiti e l'autenticazione tramite token.
+
+2. **Struttura del Progetto**:
+   - **Controller**:
+     Il controller **`AlloggiatiWebController`** gestisce le richieste dal frontend per la generazione del token e il test delle schedine. I metodi sono esposti tramite i seguenti endpoint:
+       - `/api/alloggiati/token`: Genera un token di autenticazione.
+       - `/api/alloggiati/test-schedine`: Invia le schedine al portale Alloggiati Web per il test.
+
+   - **Client SOAP**:
+     La classe **`AlloggiatiWebClient`** è responsabile dell'integrazione con il portale Alloggiati Web utilizzando i metodi del servizio SOAP generati tramite `wsimport`.
+     - Il client SOAP interagisce con il portale Alloggiati Web tramite la classe **`ServiceSoap`** generata.
+     - I metodi principali sono:
+       - **`generateToken`**: Per ottenere un token di autenticazione.
+       - **`sendSchedine`**: Per inviare le schedine al portale.
+       - **`testSchedine`**: Per testare le schedine prima di inviarle effettivamente.
+
+3. **Processo di Integrazione**:
+   - **`wsimport`** è stato utilizzato per scaricare le classi generate dal WSDL del portale Alloggiati Web. Queste classi includono **`Service`**, **`ServiceSoap`**, **`TokenInfo`**, **`EsitoOperazioneServizio`**, e altre.
+   - Le classi generate da **`wsimport`** sono state integrate nel **`AlloggiatiWebClient`** per invocare i metodi del portale Alloggiati Web, come la generazione del token e l'invio delle schedine.
+   - La gestione degli errori è stata implementata per garantire che eventuali problemi con il servizio vengano correttamente restituiti al frontend.
+
+4. **Struttura delle Classi**:
+   - **`AlloggiatiWebClient`**: Gestisce la comunicazione con il portale Alloggiati Web tramite il client SOAP generato da **`wsimport`**.
+   - **`AlloggiatiWebController`**: Gestisce le richieste HTTP dal frontend e invoca i metodi di **`AlloggiatiWebClient`**.
+   - **`Service` e `ServiceSoap`**: Classi generate tramite **`wsimport`** per interagire con il portale Alloggiati Web.
+
+5. **Test e Verifica**:
+   - Una volta completata l'integrazione, il microservizio è stato testato per verificare che il flusso di generazione del token e validazione delle schedine funzionasse correttamente.
+
+6. **Prossimi Passi**:
+   - **Frontend**: Implementare un'interfaccia utente (UI) che permetta agli **Host Manager** di inserire le proprie credenziali per il portale Alloggiati Web.
+   - **API Gateway**: Se necessario, integrare un API Gateway per la gestione centralizzata delle richieste ai microservizi.
+
+7. **Conclusioni**:
+   Il microservizio è ora pronto per essere integrato in un sistema più ampio. La gestione delle schedine e dei token funziona correttamente, e l'integrazione con il portale Alloggiati Web è stata completata.
+

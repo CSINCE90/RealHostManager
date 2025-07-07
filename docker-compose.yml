@@ -1,0 +1,130 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Francesco90
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - rhm-network
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    expose:
+      - "8081"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/auth_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Francesco90
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JWT_SECRET: onML6rObb+URy4Cej2rihPWSXlC4SMAx76WqQhtQ=
+    networks:
+      - rhm-network
+
+  structure-service:
+    build:
+      context: ./structure-service
+      dockerfile: Dockerfile
+    expose:
+      - "8082"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/structure_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Francesco90
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - rhm-network
+
+  guest-service:
+    build:
+      context: ./guestservice
+      dockerfile: Dockerfile
+    expose:
+      - "8083"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/guest_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Francesco90
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - rhm-network
+
+  booking-service:
+    build:
+      context: ./bookingservice
+      dockerfile: Dockerfile
+    expose:
+      - "8084"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/booking_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Francesco90
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - rhm-network
+
+  alloggiati-web-service:
+    build:
+      context: ./alloggiati
+      dockerfile: Dockerfile
+    expose:
+      - "8085"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/alloggiati_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Francesco90
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - rhm-network
+
+  gateway-service:
+    environment:
+      JWT_SECRET: onML6rObb+URy4Cej2rihPWSXlC4SMAx76WqQhtQ=
+    build:
+      context: ./gatewayservice
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - structure-service
+      - guest-service
+      - booking-service
+      - alloggiati-web-service
+    networks:
+      - rhm-network
+
+  frontend:
+    build:
+      context: ./real-host-manager-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - gateway-service
+    networks:
+      - rhm-network
+
+volumes:
+  mysql-data:
+
+networks:
+  rhm-network:
+    driver: bridge

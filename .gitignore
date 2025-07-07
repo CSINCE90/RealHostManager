@@ -1,0 +1,17 @@
+# Compilati Java
+*.class
+*.jar
+*.war
+target/
+out/
+
+# IDE
+.idea/
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Docker
+*.env
+mysql-init/
