@@ -26,3 +26,9 @@ Sistema gestionale per strutture ricettive, sviluppato in architettura a microse
 
 ```bash
 docker-compose up --build
+
+## Stato progetto
+
+Il progetto è attualmente in fase di refactoring architetturale, con l’obiettivo di migliorare la struttura dei pacchetti, la separazione delle responsabilità e la manutenibilità complessiva del codice.
+L’intero sistema è correttamente containerizzato tramite Docker e organizzato secondo un’architettura a microservizi.
+Il frontend React è in corso di sviluppo e sarà collegato tramite API Gateway con autenticazione JWT.
