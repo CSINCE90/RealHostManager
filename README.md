@@ -3,7 +3,7 @@ Sistema gestionale per strutture ricettive, sviluppato in architettura a microse
 
 ## Tecnologie utilizzate
 
-- Java 17
+- Java 21
 - Spring Boot 3.x
 - Spring Security con JWT
 - API Gateway con Spring Cloud Gateway
